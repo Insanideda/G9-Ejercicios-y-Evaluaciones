@@ -1,0 +1,84 @@
+import random
+
+class Equipo:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.partidosGanados = 0
+        self.partidosPerdidos = 0
+        self.setGanados = 0
+
+eq1 = Equipo("Leones")
+eq2 = Equipo("Tigres")
+
+def RegistraSet(equipoGanador):
+    if equipoGanador == 1:
+        eq1.setGanados += 1
+        print(f"{eq1.nombre} gana un set, total: {eq1.setGanados}")
+    elif equipoGanador == 2:
+        eq2.setGanados += 1
+        print(f"{eq2.nombre} gana un set, total: {eq2.setGanados}")
+
+def Puntos():
+    return random.randint(10, 28)
+
+def PuntosExtras():
+    return random.randint(0, 6)
+
+def JugarPartido():
+    eq1.setGanados = 0
+    eq2.setGanados = 0
+
+    while eq1.setGanados < 3 and eq2.setGanados < 3:
+        p1 = Puntos()
+        p2 = Puntos()
+        print(f"Puntos iniciales - {eq1.nombre}: {p1}, {eq2.nombre}: {p2}")
+
+        while True:
+            if (p1 >= 25 or p2 >= 25) and abs(p1 - p2) >= 2:
+                if p1 > p2:
+                    RegistraSet(1)
+                else:
+                    RegistraSet(2)
+                break
+            p1 += PuntosExtras()
+            p2 += PuntosExtras()
+            print(f"Puntos con extras - {eq1.nombre}: {p1}, {eq2.nombre}: {p2}")
+
+    if eq1.setGanados == 3:
+        eq1.partidosGanados += 1
+        eq2.partidosPerdidos += 1
+        print(f"El equipo  de {eq1.nombre} gana el partido")
+    else:
+        eq2.partidosGanados += 1
+        eq1.partidosPerdidos += 1
+        print(f"El equipo de {eq2.nombre} gana el partido")
+
+def ResultadoTorneo():
+    print("\nRESULTADO FINAL DEL TORNEO:")
+    print(f"{eq1.nombre} - Ganados: {eq1.partidosGanados}, Perdidos: {eq1.partidosPerdidos}")
+    print(f"{eq2.nombre} - Ganados: {eq2.partidosGanados}, Perdidos: {eq2.partidosPerdidos}")
+    
+    if eq1.partidosGanados > eq2.partidosGanados:
+        print(f"\n🎉 ¡Felicidades {eq1.nombre}, ganadores del torneo! 🎉")
+    else:
+        print(f"\n🎉 ¡Felicidades {eq2.nombre}, ganadores del torneo! 🎉")
+
+while True:
+    try:
+        cantidadPartidos = int(input("¿Cuántos partidos deben jugar los equipos? (mínimo 3): "))
+        if cantidadPartidos >= 3:
+            break
+        else:
+            print("Número ingresado no valido, vuelve a intentarlo")
+    except ValueError:
+        print("Valor ingresado no valido, ingresa un número entero")
+
+for i in range(cantidadPartidos):
+    print(f"\n=== Jugando partido {i + 1} ===")
+    JugarPartido()
+
+while eq1.partidosGanados == eq2.partidosGanados:
+    print("\n*** Hay empate en el torneo, se juega un partido extra para desempatar. ***")
+    JugarPartido()
+
+ResultadoTorneo()
